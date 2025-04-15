@@ -1,0 +1,67 @@
+[
+  {
+    "day": "Hétfő",
+    "hour": 1,
+    "subject": "Matematika"
+  },
+  {
+    "day": "Hétfő",
+    "hour": 2,
+    "subject": "Magyar"
+  },
+  {
+    "day": "Kedd",
+    "hour": 1,
+    "subject": "Pontserg"
+  },
+  {
+    "day": "Kedd",
+    "hour": 1,
+    "subject": "Fizika"
+  },
+  {
+    "day": "Péntek",
+    "hour": 1,
+    "subject": "Fizika"
+  },
+  {
+    "day": "Szombat",
+    "hour": 1,
+    "subject": "Fizika"
+  },
+  {
+    "day": "Vasárnap",
+    "hour": 1,
+    "subject": "Fizika"
+  },
+  {
+    "day": "Kedd",
+    "hour": 1,
+    "subject": "Fizika"
+  },
+  {
+    "day": "Kedd",
+    "hour": 1,
+    "subject": "Fizika"
+  },
+  {
+    "day": "Kedd",
+    "hour": 1,
+    "subject": "Fizika"
+  },
+  {
+    "day": "Kedd",
+    "hour": 1,
+    "subject": "Fizika"
+  },
+  {
+    "day": "Hétfő",
+    "hour": 3,
+    "subject": "Matek"
+  },
+  {
+    "day": "Szerda",
+    "hour": 2,
+    "subject": "asdfasdf"
+  }
+]

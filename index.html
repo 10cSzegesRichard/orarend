@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Heti Órarend</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: center; min-width: 120px; }
+    input, select, button { margin: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Heti Órarend</h1>
+
+  <!-- Új óra hozzáadása -->
+  <div>
+    <select id="day">
+      <option>Hétfő</option>
+      <option>Kedd</option>
+      <option>Szerda</option>
+      <option>Csütörtök</option>
+      <option>Péntek</option>
+    </select>
+    <input type="number" id="hour" placeholder="Óra (szám)" min="1" max="10" />
+    <input type="text" id="subject" placeholder="Tantárgy" />
+    <button onclick="addLesson()">Hozzáadás</button>
+  </div>
+
+  <!-- Órarend táblázat -->
+  <table id="scheduleTable">
+    <thead>
+      <tr>
+        <th>Óra</th>
+        <th>Hétfő</th>
+        <th>Kedd</th>
+        <th>Szerda</th>
+        <th>Csütörtök</th>
+        <th>Péntek</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const API_URL = "http://localhost:3000/api/schedule";
+    const days = ["Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek"];
+    const maxHours = 10;
+
+    async function fetchSchedule() {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+
+      const tbody = document.querySelector("#scheduleTable tbody");
+      tbody.innerHTML = "";
+
+      for (let hour = 1; hour <= maxHours; hour++) {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${hour}</td>`;
+
+        for (let day of days) {
+          const lesson = data.find(item => item.day === day && item.hour === hour);
+
+          if (lesson) {
+            row.innerHTML += `
+              <td>
+                <span class="subject">${lesson.subject}</span><br>
+                <button onclick="editLesson('${day}', ${hour}, this)">✏️</button>
+                <button onclick="deleteLesson('${day}', ${hour})">🗑️</button>
+              </td>
+            `;
+          } else {
+            row.innerHTML += "<td></td>";
+          }
+        }
+
+        tbody.appendChild(row);
+      }
+    }
+
+    async function addLesson() {
+      const day = document.getElementById("day").value;
+      const hour = parseInt(document.getElementById("hour").value);
+      const subject = document.getElementById("subject").value;
+
+      if (!day || !hour || !subject) {
+        alert("Minden mezőt ki kell tölteni!");
+        return;
+      }
+
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ day, hour, subject })
+      });
+
+      fetchSchedule();
+    }
+
+    async function deleteLesson(day, hour) {
+      await fetch(API_URL, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ day, hour })
+      });
+
+      fetchSchedule();
+    }
+
+    async function editLesson(day, hour, button) {
+      const td = button.closest("td");
+      const subjectSpan = td.querySelector(".subject");
+
+      const newSubject = prompt("Új tantárgy:", subjectSpan.textContent);
+
+      if (newSubject && newSubject.trim() !== "") {
+        await fetch(API_URL, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ day, hour, subject: newSubject.trim() })
+        });
+
+        fetchSchedule();
+      }
+    }
+
+    fetchSchedule();
+  </script>
+</body>
+</html>
